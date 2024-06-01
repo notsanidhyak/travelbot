@@ -5,4 +5,4 @@ httplib2==0.22.0
 gunicorn==22.0.0
 fastapi
 pydantic
-dotenv
+python-dotenv
