@@ -1,4 +1,4 @@
--q -U google-generativeai
+google-generativeai
 uvicorn
 requests
 httplib2==0.22.0
