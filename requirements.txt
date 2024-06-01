@@ -1,0 +1,7 @@
+-q -U google-generativeai
+uvicorn
+requests
+httplib2==0.22.0
+gunicorn==22.0.0
+fastapi
+pydantic
