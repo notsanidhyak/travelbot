@@ -39,6 +39,8 @@ app = FastAPI()
 
 class UserPrompt(BaseModel):
     prompt: str
+    lat:float
+    lon:float
 
 def get_current_location():
     try:
@@ -95,7 +97,7 @@ def extract_items(input_string):
     second_item = items[1]
     return first_item, second_item
 
-def mainbot(user_prompt):
+def mainbot(user_prompt, ulat, ulon):
     try:
         response = chat.send_message(user_prompt)
         converted_data = ast.literal_eval(response.text)
@@ -104,7 +106,8 @@ def mainbot(user_prompt):
             start = converted_data[1][0]
             end = converted_data[1][1]
             if start == "null":
-                startlat, startlon, city = get_current_location()
+                startlat = ulat
+                startlon = ulon
             else:
                 startlat, startlon = get_latlon_from_add(start)
             endlat, endlon = get_latlon_from_add(end)
@@ -135,7 +138,7 @@ async def home():
 @app.post("/process_prompt/")
 async def process_prompt(user_prompt: UserPrompt):
     try:
-        geminires = mainbot(user_prompt.prompt)
+        geminires = mainbot(user_prompt.prompt, user_prompt.lat, user_prompt.lon)
         return {"result": geminires}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
