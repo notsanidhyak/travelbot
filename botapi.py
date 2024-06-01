@@ -6,8 +6,14 @@ import http.client
 import json
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+from dotenv import load_dotenv
 
-os.environ['GOOGLE_API_KEY'] = "AIzaSyBhDwlRk4l-CrF--tsI65292Vy1kiTnhtA"
+load_dotenv()
+
+GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+RAPIDAPI_KEY = os.getenv('RAPIDAPI_KEY')
+
+os.environ['GOOGLE_API_KEY'] = GOOGLE_API_KEY
 genai.configure(api_key=os.environ['GOOGLE_API_KEY'])
 
 model = genai.GenerativeModel('gemini-pro')
@@ -52,7 +58,7 @@ def get_latlon_from_add(add):
         add = remove_spaces(add)
         conn = http.client.HTTPSConnection("map-geocoding.p.rapidapi.com")
         headers = {
-            'x-rapidapi-key': "471e8158f3msh8a635468b130216p1e05edjsn2dc6b80683ef",
+            'x-rapidapi-key': RAPIDAPI_KEY,
             'x-rapidapi-host': "map-geocoding.p.rapidapi.com"
         }
         conn.request("GET", f"/json?address={add}", headers=headers)
@@ -72,7 +78,7 @@ def get_weather(add, lat, lon):
             lat, lon = get_latlon_from_add(add)
         conn = http.client.HTTPSConnection("open-weather13.p.rapidapi.com")
         headers = {
-            'x-rapidapi-key': "471e8158f3msh8a635468b130216p1e05edjsn2dc6b80683ef",
+            'x-rapidapi-key': RAPIDAPI_KEY,
             'x-rapidapi-host': "open-weather13.p.rapidapi.com"
         }
         conn.request("GET", f"/city/latlon/{lat}/{lon}", headers=headers)
